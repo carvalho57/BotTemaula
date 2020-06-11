@@ -20,8 +20,7 @@ namespace temAulaBotTelegram
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IUpdateService, UpdateService>();
-            services.AddScoped<IMessageService, MessageService>();
-            services.AddScoped<IInfoService, InfoService>();
+            services.AddScoped<ICommandService, CommandService>();
             services.AddSingleton<IBotService, BotService>();
             services.Configure<BotConfiguration>(Configuration.GetSection("BotConfiguration"));
                         

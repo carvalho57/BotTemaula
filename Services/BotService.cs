@@ -11,11 +11,9 @@ namespace temAulaBotTelegram.Services
         {
             _config = config.Value;
             // use proxy if configured in appsettings.*.json
-            Client = new TelegramBotClient(_config.BotToken);            
+            Client = new TelegramBotClient(_config.BotToken);             
         }
 
         public TelegramBotClient Client { get; }
-
-
     }
 }

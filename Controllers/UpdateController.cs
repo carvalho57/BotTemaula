@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using temAulaBotTelegram.Services;
 using temAulaBotTelegram.Models;
 using Telegram.Bot.Types;
+using System.Text.RegularExpressions;
 
 
 namespace temAulaBotTelegram
@@ -10,37 +11,37 @@ namespace temAulaBotTelegram
     [Route("api/[controller]")]
     public class UpdateController : Controller
     {
+        private readonly ICommandService _commandService;
         private readonly IUpdateService _updateService;
-        private readonly IMessageService _messageService;
-
-        private readonly IInfoService _infoService;
-
-        public UpdateController(IUpdateService updateService,
-                     IMessageService messageService,
-                     IInfoService infoService
-        ) {
+        private readonly IBotService _serviceTelegram;
+        
+        public UpdateController(
+            ICommandService commandService,
+            IBotService serviceTelegram,
+            IUpdateService updateService)
+        {            
+            _commandService = commandService;
+            _serviceTelegram = serviceTelegram;
             _updateService = updateService;
-            _messageService = messageService;
-            _infoService = infoService;
         }
-
-        [HttpGet]
-        public async Task<ActionResult<WhoAmI>> Get() {
-            var me = await _infoService.GetBotInformation();
-            return new WhoAmI(me.Username, me.FirstName);
+       
+        public async Task<object> Get() {
+            var me =  await _serviceTelegram.Client.GetMeAsync();                          
+            return new {
+                        UserName = me.Username,
+                        FirstName = me.FirstName,
+                        IsBot = me.IsBot,
+                        Message = "Aqui o pessoal é porreta"
+                        };     
         }
-
         // POST api/update
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Update update)
-        {
-            if(update.Message != null && update.Message.NewChatMembers != null) {
-                await _updateService.SendRulesToNewUsers(update);            
-                return Ok();
-            }
-
-            await _messageService.FilterCommand(update);
+        {                                                    
+            await _commandService.Dispatch(update,_serviceTelegram);            
+            await _updateService.SendRulesToNewUsers(update.Message, _serviceTelegram);
             return Ok();         
         }
+
     }
 }
