@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Telegram.Bot;
 using temAulaBotTelegram.Services;
 
 namespace temAulaBotTelegram
@@ -19,14 +20,9 @@ namespace temAulaBotTelegram
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IUpdateService, UpdateService>();
+            services.AddSingleton<TelegramBotClient>(new TelegramBotClient(Configuration.GetSection("BotConfiguration").Value));
             services.AddScoped<ICommandService, CommandService>();
-            services.AddSingleton<IBotService, BotService>();
-            services.Configure<BotConfiguration>(Configuration.GetSection("BotConfiguration"));
-                        
-            services
-                .AddControllers()
-                .AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

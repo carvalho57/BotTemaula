@@ -1,18 +1,21 @@
 
 using System.Threading.Tasks;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using temAulaBotTelegram.Services;
 
 namespace temAulaBotTelegram.Commands {
-    public class NoCommand : ICommand
+    public class NoCommand : Command
     {
-        public string Name { get; private set; } = "";
-        public async Task Execute(Message message, IBotService serviceTelegram)
+        public NoCommand(TelegramBotClient telegramClient) : base(telegramClient)
+        {
+            Name = "";
+        }        
+        public async override Task Execute(Message message)
         {
                
-         await serviceTelegram
-                .Client.SendTextMessageAsync(
+         await TelegramClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: $"Você disse:\n {message.Text}",
                     parseMode: ParseMode.Markdown

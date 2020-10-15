@@ -1,18 +1,23 @@
 
 using System.Threading.Tasks;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using temAulaBotTelegram.Services;
 
 namespace temAulaBotTelegram.Commands {
-    public class HelpCommand : ICommand
+    public class HelpCommand : Command
     {
-        public string Name { get; private set; } = "/ajuda";
-        public async Task Execute(Message message, IBotService serviceTelegram)
+        public HelpCommand(TelegramBotClient telegramClient)
+        : base(telegramClient)
+        {
+            Name = "/ajuda";
+        }
+        
+        public async override Task Execute(Message message)
         {
             const string usage = "Bot do Grupo Tem Aula 🤖 \n Comandos:\n/sobre - Sobre esse bot \n/regras - Descrição das regras\n /ajuda - Ajuda\n";
                                     
-            await serviceTelegram
-                .Client.SendTextMessageAsync(
+            await TelegramClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: usage
                 );      

@@ -5,6 +5,6 @@ namespace temAulaBotTelegram.Services
 {
     public interface IUpdateService
     {   
-        Task SendRulesToNewUsers(Message update, IBotService serviceTelegram);
+        Task SendRulesToNewUsers(Message update);
     }
 }

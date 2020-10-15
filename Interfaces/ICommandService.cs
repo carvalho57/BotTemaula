@@ -5,6 +5,6 @@ using temAulaBotTelegram.Commands;
 namespace temAulaBotTelegram.Services {
     public interface ICommandService
     {        
-        Task Dispatch(Update update, IBotService telegramService);
+        Task Dispatch(Update update);
     }
 }
