@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Telegram.Bot;
 
 using temAulaBotTelegram.Services;
 
@@ -22,8 +23,9 @@ namespace temAulaBotTelegram
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<BotConfiguration>(Configuration.GetSection(nameof(BotConfiguration)));
-            services.AddTelegramClient(Configuration);
+            var telegram = new TelegramBotClient(Configuration.GetSection("BotConfiguration").GetSection("BotToken").Value);
+            telegram.SetWebhookAsync(Configuration.GetSection("BotConfiguration").GetSection("UrlWebHook").Value);
+            services.AddSingleton<TelegramBotClient>(telegram);
             services.AddScoped<ICommandService, CommandService>();
             services.AddControllers().AddNewtonsoftJson();
             services.AddHangfire(config =>

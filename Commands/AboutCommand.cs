@@ -7,7 +7,6 @@ using temAulaBotTelegram.Services;
 namespace temAulaBotTelegram.Commands {
     public class AboutCommand : Command
     {
-        private const string usage = "🤖 Bot do Grupo Tem Aula 🤖, digite o comando /ajuda para ver o que posso fazer.";
         public AboutCommand(TelegramBotClient telegramClient)
         :base(telegramClient)
         {
@@ -15,7 +14,7 @@ namespace temAulaBotTelegram.Commands {
         }        
         public async override Task Execute(Message message)
         {
-            
+            const string usage = "🤖 Bot do Grupo Tem Aula 🤖, digite o comando /ajuda para ver o que posso fazer.";
                                     
             await TelegramClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
