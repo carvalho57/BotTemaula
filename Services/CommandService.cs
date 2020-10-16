@@ -16,7 +16,6 @@ namespace temAulaBotTelegram.Services
     {
         private readonly List<Command> _commands;
         private readonly TelegramBotClient _telegramClient;
-        private readonly NoCommand _defaultCommand;
         public CommandService(TelegramBotClient telegramClient)
         {
             _telegramClient = telegramClient;
@@ -26,54 +25,60 @@ namespace temAulaBotTelegram.Services
                 new HelpCommand(_telegramClient),
                 new StartCommand(_telegramClient)
             };
-            _defaultCommand = new NoCommand(_telegramClient);
         }
         //Procurar o comando
         public async Task Dispatch(Update update)
         {
-            var message = update.CallbackQuery != null ? update.CallbackQuery.Message : update.Message;
-            message.Text ??= "";
-            var commandName = GetCommandNameFromMessageText(message.Text);
-            var command = _commands
-                            .FirstOrDefault(command => command.Name == commandName)
-                            ?? _defaultCommand;
-                                                                         
-            await ExecuteCommand(command, message);
+            var message = update.CallbackQuery != null
+                        ? update.CallbackQuery.Message
+                        : update.Message;
 
-            if (message.NewChatMembers != null)
-                await SendRulesToNewUsers(message);
+            var commandName = GetCommandNameFromMessage(message);
+            var command = _commands
+                            .FirstOrDefault(command => command.Name == commandName);
+
+            await ExecuteCommand(command, message);
+            await SendRulesToNewUsers(message);
         }
         // Executa o comando
         private async Task ExecuteCommand(Command command, Message message)
-        {               
-            if(command != null && message != null)
+        {
+            if (command != null && message != null)
                 await command.Execute(message);
         }
-        private string GetCommandNameFromMessageText(string messageText)
+        private string GetCommandNameFromMessage(Message message)
         {
+            if(message.ReplyMarkup != null) 
+                return message.ReplyMarkup.InlineKeyboard.First().First().CallbackData;                                
+                
+            message.Text ??= "";
             var regex = new Regex(@"[@\s]");
-            return regex.Split(messageText)[0];
+            return regex.Split(message.Text)[0];
         }
 
         public async Task SendRulesToNewUsers(Message message)
         {
-            var newMembers = message.NewChatMembers;
-
-            var buttonReadRules = new InlineKeyboardMarkup(
-                InlineKeyboardButton.
-                        WithCallbackData("Regras", "/regras"));
-
-            
-            foreach (var member in newMembers)
+            if (message.NewChatMembers != null)
             {
-                await _telegramClient
-                            .SendTextMessageAsync(
-                                chatId: message.Chat,
-                                text: $"Seja bem-vindo(a) {member.FirstName} ao Grupo do Tem Aula\nAproveitem q a galera aqui do grupo é porreta!!!",
-                                parseMode: ParseMode.Markdown,
-                                replyMarkup: buttonReadRules
-                            );
+                var newMembers = message.NewChatMembers;
+
+                var buttonReadRules = new InlineKeyboardMarkup(
+                    InlineKeyboardButton.
+                            WithCallbackData("Regras", "/regras"));
+
+
+                foreach (var member in newMembers)
+                {
+                    await _telegramClient
+                                .SendTextMessageAsync(
+                                    chatId: message.Chat.Id,
+                                    text: $"Seja bem-vindo(a) *{member.FirstName}* ao Grupo do Tem Aula\nAproveitem q a galera aqui do grupo é porreta!!!",
+                                    parseMode: ParseMode.Markdown,
+                                    replyMarkup: buttonReadRules
+                                );
+                }
             }
-        }        
+
+        }
     }
 }
