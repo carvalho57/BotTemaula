@@ -1,9 +1,12 @@
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Telegram.Bot;
+
 using temAulaBotTelegram.Services;
 
 namespace temAulaBotTelegram
@@ -20,9 +23,16 @@ namespace temAulaBotTelegram
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<TelegramBotClient>(new TelegramBotClient(Configuration.GetSection("BotConfiguration").Value));
+            var telegram = new TelegramBotClient(Configuration.GetSection("BotConfiguration").GetSection("BotToken").Value);
+            telegram.SetWebhookAsync(Configuration.GetSection("BotConfiguration").GetSection("UrlWebHook").Value);
+            services.AddSingleton<TelegramBotClient>(telegram);
             services.AddScoped<ICommandService, CommandService>();
             services.AddControllers().AddNewtonsoftJson();
+            services.AddHangfire(config =>
+            {
+                config.UseMemoryStorage();
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,8 +43,7 @@ namespace temAulaBotTelegram
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
+            app.UseHangfireServer();
             app.UseRouting();
 
             app.UseAuthorization();

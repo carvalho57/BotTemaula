@@ -14,7 +14,7 @@ namespace temAulaBotTelegram.Commands {
         }        
         public async override Task Execute(Message message)
         {
-            const string usage = "🤖 Bot do Grupo Tem Aula 🤖, digite o comando /sobre para mais informações";
+            const string usage = "🤖 Bot do Grupo Tem Aula 🤖, digite o comando /ajuda para ver o que posso fazer.";
                                     
             await TelegramClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,

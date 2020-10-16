@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -15,23 +16,28 @@ namespace temAulaBotTelegram.Services
     {
         private readonly List<Command> _commands;
         private readonly TelegramBotClient _telegramClient;
+        private readonly NoCommand _defaultCommand;
         public CommandService(TelegramBotClient telegramClient)
         {
             _telegramClient = telegramClient;
             _commands = new List<Command>() {
                 new RulesCommand(_telegramClient),
-                new NoCommand(_telegramClient),
                 new AboutCommand(_telegramClient),
                 new HelpCommand(_telegramClient),
                 new StartCommand(_telegramClient)
             };
+            _defaultCommand = new NoCommand(_telegramClient);
         }
         //Procurar o comando
         public async Task Dispatch(Update update)
         {
-            var message = update.CallbackQuery.Message ?? update.Message;
-            var commandName = GetCommandNameFromMessage(message);
-            var command = _commands.FirstOrDefault(command => command.Name == commandName);
+            var message = update.CallbackQuery != null ? update.CallbackQuery.Message : update.Message;
+            message.Text ??= "";
+            var commandName = GetCommandNameFromMessageText(message.Text);
+            var command = _commands
+                            .FirstOrDefault(command => command.Name == commandName)
+                            ?? _defaultCommand;
+                                                                         
             await ExecuteCommand(command, message);
 
             if (message.NewChatMembers != null)
@@ -39,14 +45,14 @@ namespace temAulaBotTelegram.Services
         }
         // Executa o comando
         private async Task ExecuteCommand(Command command, Message message)
-        {
-            await command.Execute(message);
-
+        {               
+            if(command != null && message != null)
+                await command.Execute(message);
         }
-        private string GetCommandNameFromMessage(Message message)
+        private string GetCommandNameFromMessageText(string messageText)
         {
             var regex = new Regex(@"[@\s]");
-            return regex.Split(message.Text)[0];
+            return regex.Split(messageText)[0];
         }
 
         public async Task SendRulesToNewUsers(Message message)
@@ -57,16 +63,17 @@ namespace temAulaBotTelegram.Services
                 InlineKeyboardButton.
                         WithCallbackData("Regras", "/regras"));
 
+            
             foreach (var member in newMembers)
             {
                 await _telegramClient
                             .SendTextMessageAsync(
                                 chatId: message.Chat,
-                                text: $"Seja bem-vindo(a) {member.FirstName}\n ao Grupo do Tem Aula",
+                                text: $"Seja bem-vindo(a) {member.FirstName} ao Grupo do Tem Aula\nAproveitem q a galera aqui do grupo é porreta!!!",
                                 parseMode: ParseMode.Markdown,
                                 replyMarkup: buttonReadRules
                             );
             }
-        }
+        }        
     }
 }

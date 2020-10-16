@@ -13,7 +13,7 @@ namespace temAulaBotTelegram.Commands {
         {
             Name = "/start";
         }
-        private const string Message = @"Olá, Eu sou um bot que envia as regras do grupo, para cada novo usuário e quando me pedem para fazer isso. Me envie o commando /sobre para ver o que posso fazer";    
+        private const string Message = @"Olá, Eu sou um bot que envia as regras do grupo, para cada novo usuário e quando me pedem para fazer isso. Me envie o commando /ajuda para ver o que posso fazer";    
         public async override Task Execute(Message message)
         {
             await TelegramClient
