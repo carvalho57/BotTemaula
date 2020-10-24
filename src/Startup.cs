@@ -1,13 +1,12 @@
 using Hangfire;
+using Telegram.Bot;
 using Hangfire.MemoryStorage;
+using temAulaBotTelegram.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Telegram.Bot;
-
-using temAulaBotTelegram.Services;
 
 namespace temAulaBotTelegram
 {
@@ -25,8 +24,10 @@ namespace temAulaBotTelegram
         {
             var telegram = new TelegramBotClient(Configuration.GetSection("BotConfiguration").GetSection("BotToken").Value);
             telegram.SetWebhookAsync(Configuration.GetSection("BotConfiguration").GetSection("UrlWebHook").Value);
-            services.AddSingleton<TelegramBotClient>(telegram);
+            services.AddSingleton<ITelegramBotClient>(telegram);
+            services.AddScoped<IDispatcherService, DispatcherService>();
             services.AddScoped<ICommandService, CommandService>();
+            services.AddScoped<ICallBackExecutor, CallBackExecutor>();
             services.AddControllers().AddNewtonsoftJson();
             services.AddHangfire(config =>
             {
