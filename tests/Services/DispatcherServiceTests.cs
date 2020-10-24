@@ -10,12 +10,10 @@ namespace temAulaBotTelegram.Tests.Services
     public class DispatcherServiceTests
     {
 
-        private readonly IDispatcherService _dispatcherService;
-        private readonly ICommandService _commandService;
-        private readonly ICallBackExecutor _callbackExecutor;
+        private readonly IDispatcherService _dispatcherService;             
         public DispatcherServiceTests()
-        {            
-            _dispatcherService = new DispatcherService(_commandService, _callbackExecutor);
+        {
+            _dispatcherService = new DispatcherService(null,null);
         }
         [TestMethod]
         [DataRow("/regras")]

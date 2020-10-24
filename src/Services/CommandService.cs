@@ -10,8 +10,8 @@ namespace temAulaBotTelegram.Services
     public class CommandService : ICommandService
     {
         private readonly List<Command> _commands;
-        public ITelegramBotClient _telegramClient { get; }
-        public CommandService(ITelegramBotClient telegramClient)
+        public TelegramBotClient _telegramClient { get; }
+        public CommandService(TelegramBotClient telegramClient)
         {
             _telegramClient = telegramClient;
             _commands = RegisteredCommands.GetCommands();

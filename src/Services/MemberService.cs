@@ -6,21 +6,18 @@ using temAulaBotTelegram.Models;
 
 namespace temAulaBotTelegram.Services
 {
-    public class CallBackExecutor : ICallBackExecutor
+    public class MemberService : IMemberService
     {
-        private readonly ITelegramBotClient _cliente;
-        public CallBackExecutor(ITelegramBotClient cliente)
+        private readonly TelegramBotClient _cliente;
+        public MemberService(TelegramBotClient cliente)
         {
             _cliente = cliente;
         }
-        public async Task SendRulesTonewMembers(InputMessage message)
-        {            
-            var buttonReadRules = new InlineKeyboardMarkup(
-                InlineKeyboardButton.
-                        WithCallbackData("Regras", "/regras"));
-
-
-            foreach (var member in  message.NewChatMembers)
+        public async Task SendRulesToNewMembers(InputMessage message)
+        {
+            var buttonReadRules = new InlineKeyboardMarkup(InlineKeyboardButton.WithCallbackData("Regras", "/regras"));
+            
+            foreach (var member in message.NewChatMembers)
             {
                 await _cliente
                             .SendTextMessageAsync(

@@ -24,10 +24,10 @@ namespace temAulaBotTelegram
         {
             var telegram = new TelegramBotClient(Configuration.GetSection("BotConfiguration").GetSection("BotToken").Value);
             telegram.SetWebhookAsync(Configuration.GetSection("BotConfiguration").GetSection("UrlWebHook").Value);
-            services.AddSingleton<ITelegramBotClient>(telegram);
-            services.AddScoped<IDispatcherService, DispatcherService>();
+            services.AddSingleton<TelegramBotClient>(telegram);
+            services.AddScoped<IMemberService, MemberService>();    
             services.AddScoped<ICommandService, CommandService>();
-            services.AddScoped<ICallBackExecutor, CallBackExecutor>();
+            services.AddScoped<IDispatcherService, DispatcherService>();
             services.AddControllers().AddNewtonsoftJson();
             services.AddHangfire(config =>
             {

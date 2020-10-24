@@ -10,8 +10,8 @@ namespace temAulaBotTelegram
     public class UpdateController : Controller
     {
         private readonly IDispatcherService _dispatcher;        
-        private readonly ITelegramBotClient _telegramClient;
-        public UpdateController(IDispatcherService dispatcher, ITelegramBotClient telegramBotClient)
+        private readonly TelegramBotClient _telegramClient;
+        public UpdateController(IDispatcherService dispatcher, TelegramBotClient telegramBotClient)
         {
             _dispatcher = dispatcher;            
             _telegramClient = telegramBotClient;

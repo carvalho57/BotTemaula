@@ -8,6 +8,6 @@ namespace temAulaBotTelegram.Interfaces
     {
         public string Name { get; protected set;}
         public string Message {get;protected set;}
-        public abstract Task Execute(ITelegramBotClient cliente, InputMessage inputMessage);
+        public abstract Task Execute(TelegramBotClient cliente, InputMessage inputMessage);
     }
 }

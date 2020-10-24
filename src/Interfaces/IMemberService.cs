@@ -3,8 +3,8 @@ using temAulaBotTelegram.Models;
 
 namespace temAulaBotTelegram.Services
 {
-    public interface ICallBackExecutor
+    public interface IMemberService
     {
-        Task SendRulesTonewMembers(InputMessage message);
+        Task SendRulesToNewMembers(InputMessage message);
     }
 }

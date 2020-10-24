@@ -10,19 +10,19 @@ namespace temAulaBotTelegram.Services
     public class DispatcherService : IDispatcherService
     {
         private readonly ICommandService _commandService;
-        private readonly ICallBackExecutor _callbackExecutor;
-        public DispatcherService(ICommandService commandService, ICallBackExecutor callbackExecutor)
+        private readonly IMemberService _memberService;        
+        public DispatcherService(ICommandService commandService, IMemberService memberService)
         {
             _commandService = commandService;
-            _callbackExecutor = callbackExecutor;
+            _memberService = memberService;            
         }
 
         public async Task Dispatch(Update update)
         {
-            var inputMessage = GenereteInputMessage(update);         
+            var inputMessage = GenereteInputMessage(update);                                      
             if(inputMessage.HasNewMembers)    
-                await _callbackExecutor.SendRulesTonewMembers(inputMessage);
-            else                
+                await _memberService.SendRulesToNewMembers(inputMessage);                        
+            else
                 await _commandService.ExecuteCommand(inputMessage);
         }
 
@@ -38,13 +38,14 @@ namespace temAulaBotTelegram.Services
                             callmessage.ReplyMarkup.InlineKeyboard.First().First().CallbackData,
                             callmessage.NewChatMembers,
                             callmessage,
-                            update.Type
+                            update.Type,
+                            true
                         );
             }
 
             var message = update.Message;
             var commandName = GetCommandFromMessage(message);
-            return new InputMessage(message.Chat.Id, commandName, message.NewChatMembers, message, update.Type);
+            return new InputMessage(message.Chat.Id, commandName, message.NewChatMembers, message, update.Type, false);
 
         }
         private string GetCommandFromMessage(Message message)
