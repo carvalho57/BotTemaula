@@ -7,8 +7,7 @@ Instalado
 * [Download Dotnet Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 * [Ngrok](https://ngrok.com/download)
 
-Um [Bot](https://core.telegram.org/bots#3-how-do-i-create-a-bot) 
-e o token de autorização ( que se parece com isso *1234567:4TT8bAc8GHUspu3ERYn-KGcvsvGB9u_n4ddy* ).
+Um [Bot](https://core.telegram.org/bots#3-how-do-i-create-a-bot)  e o token de autorização, que se parece com isso *1234567:4TT8bAc8GHUspu3ERYn-KGcvsvGB9u_n4ddy*.
 
 Tudo pronto então vamos rodar o projeto.
 
