@@ -15,10 +15,9 @@ namespace temAulaBotTelegram.Commands
             Message = @"Olá, Eu sou um bot que envia as regras do grupo, para cada novo usuário e quando me pedem para fazer isso. Me envie o commando /ajuda para ver o que posso fazer";
         }
 
-        public override async Task Execute(TelegramBotClient cliente, InputMessage message)
+        public override async Task Execute(RegisteredServices services, InputMessage message)
         {
-            await cliente
-                .SendTextMessageAsync(
+            await services.TelegramClient.SendTextMessageAsync(
                     chatId: message.ChatId,
                     text: Message,
                     parseMode: ParseMode.Markdown

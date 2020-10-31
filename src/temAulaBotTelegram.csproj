@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis" Version="1.49.0" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.49.0.2120" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.16" />
     <PackageReference Include="HangFire.Core" Version="1.7.16" />
     <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />

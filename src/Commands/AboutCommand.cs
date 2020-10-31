@@ -12,9 +12,9 @@ namespace temAulaBotTelegram.Commands
             Name = "/sobre";
             Message = "🤖 Bot do Grupo Tem Aula 🤖, digite o comando /ajuda para ver o que posso fazer.";
         }                
-        public override async Task Execute(TelegramBotClient cliente, InputMessage message)
+        public override async Task Execute(RegisteredServices services, InputMessage message)
         {
-            await cliente.SendTextMessageAsync(
+            await services.TelegramClient.SendTextMessageAsync(
                     chatId: message.ChatId,
                     text: Message
                 );      

@@ -14,7 +14,8 @@ namespace temAulaBotTelegram.Models
                 new AboutCommand(),
                 new HelpCommand(),
                 new RulesCommand(),
-                new StartCommand()                
+                new StartCommand(),
+                new TemAulaCommand()                
             };
         }
         public static List<Command> GetCommands() => _commands;

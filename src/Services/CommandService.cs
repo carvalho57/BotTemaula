@@ -10,19 +10,19 @@ namespace temAulaBotTelegram.Services
     public class CommandService : ICommandService
     {
         private readonly List<Command> _commands;
-        public TelegramBotClient _telegramClient { get; }
-        public CommandService(TelegramBotClient telegramClient)
+        private readonly RegisteredServices _services;
+        public CommandService(RegisteredServices services)
         {
-            _telegramClient = telegramClient;
+            _services = services;
             _commands = RegisteredCommands.GetCommands();
         }
-        
+
         //Implementar commando default
         public async Task ExecuteCommand(InputMessage message)
         {
             var command = GetCommand(message.CommandName);
             if (command != null)
-                await command.Execute(_telegramClient, message);
+                await command.Execute(_services, message);
         }
 
         public Command GetCommand(string commandName)
